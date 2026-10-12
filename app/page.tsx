@@ -1,32 +1,255 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { ArrowUpRight, ArrowDown, ShieldCheck, LockKeyhole, Fingerprint, Smartphone, Database, Layers, Check, ChevronRight, RotateCcw, Plus, ArrowRight, Leaf, CreditCard, Coffee, ShoppingBag } from 'lucide-react';
+import Image from "next/image";
+import {
+  ArrowDown,
+  ArrowUpRight,
+  Leaf,
+  Smartphone,
+  SlidersHorizontal,
+} from "lucide-react";
+import { site, release } from "../config/site";
 
-const architecture = [
- {title:'The human layer', tech:'Flutter · Riverpod · GoRouter', copy:'One calm interface. Explicit state. Predictable navigation.', detail:'Flutter is the planned cross-platform presentation layer. Riverpod would expose application state through testable providers; GoRouter would handle routes and guarded flows. Widgets would never parse bank messages or write directly to the ledger.', tags:['Accessible components','Review before commit','Offline navigation']},
- {title:'The financial core', tech:'Domain model · Use cases', copy:'A reliable ledger beneath an effortless experience.', detail:'Integer minor units, explicit currencies and immutable source evidence would keep money precise. Proposed use cases cover accounts, transactions, transfers, categorisation and reconciliation. A credit-card purchase is an expense and liability; paying the bill is a transfer, not another expense.', tags:['No floating-point money','Idempotent imports','Transfer reconciliation']},
- {title:'The local data layer', tech:'Drift · SQLite · SQLCipher', copy:'Your device is the source of truth.', detail:'Drift would provide typed queries and migrations over SQLite. SQLCipher integration is planned for encrypted storage, subject to platform validation. Transactions would commit atomically, with tested migration paths and an audit trail for corrections.', tags:['Atomic writes','Migration fixtures','Encrypted database']},
- {title:'The security boundary', tech:'OS keystore · App lock', copy:'Privacy is a boundary, not a preference.', detail:'The proposed design keeps database keys in platform-backed secure storage, minimises sensitive logs and locks the app after a configurable interval. Biometric access would unlock a protected key; it would not replace an independently recoverable backup secret.', tags:['Threat-model first','Key lifecycle','Redacted diagnostics']},
- {title:'The adapter layer', tech:'Gmail · Android SMS · Backup', copy:'Outside signals. Inside control.', detail:'Permissioned adapters would translate external data into candidate events through a shared interface. Gmail scopes and Android SMS policy eligibility must be validated before implementation; unrestricted SMS access on iOS is not assumed. Backup destinations would receive encrypted packages only.', tags:['Optional permissions','Replaceable adapters','No cloud dependency']}
-];
-const journey = [
- {title:'Two messages. One moment.', text:'A bank debit and a card-network receipt arrive seconds apart. Both describe the same fictional ₹840 purchase.', label:'01 / Discover'},
- {title:'Find the financial signal.', text:'Planned parsers extract amount, account suffix, direction, reference and event time. Raw evidence stays attached to its source.', label:'02 / Normalise'},
- {title:'Connect the evidence.', text:'An exact reference can link matching messages. Amount, account and a narrow time window suggest a match—not proof on their own.', label:'03 / Reconcile'},
- {title:'One clear record. Your call.', text:'A high-confidence match becomes one candidate with two evidence sources. Ambiguous matches remain separate for human review.', label:'04 / Review'}
-];
-function Dashboard({small=false}:{small?:boolean}) {return <div className={`dashboard ${small?'mini':''}`}><div className="dash-top"><span className="wordmark">nivo<span>.</span></span><span className="avatar">A</span></div><div className="dash-greeting">A LITTLE CLARITY FOR YOUR DAY</div><h3>Good morning, Aarav <span>✳</span></h3><div className="balance"><span>Available across your accounts</span><strong>₹48,260<span>.00</span></strong><div><span className="balance-dot"/> A comfortable cushion for this month</div></div><div className="dash-grid"><div><span>Money in</span><b>₹72,000</b><small>Salary & other income</small></div><div><span>Money out</span><b>₹23,740</b><small>So far this month</small></div></div><div className="spend-title"><b>Your month, gently in view</b><span>October</span></div><div className="chart" aria-label="Fictional daily spending bar chart">{[28,48,36,68,44,31,57,75,49,37,60,43,29,52,65,45,33,72,55,41,61,35,47,28].map((v,i)=><i key={i} style={{height:`${v}%`}}/>)}</div><div className="chart-label"><span>01 OCT</span><span>15 OCT</span><span>31 OCT</span></div><div className="recent"><b>A few recent moments</b><span>View all ↗</span></div>{[[Coffee,'Morning coffee','Today, 09:18','− ₹180'],[ShoppingBag,'Everyday essentials','Yesterday, 18:42','− ₹840']].map(([Icon,title,time,amount],i)=><div className="transaction" key={i}><span className="transaction-icon">{typeof Icon!=='string'&&<Icon size={17}/>}</span><div><b>{String(title)}</b><small>{String(time)}</small></div><strong>{String(amount)}</strong></div>)}<div className="dash-nav"><span className="active">◉ Home</span><span>↔ Activity</span><span>▤ Accounts</span><span>◎ You</span></div></div>}
-export default function Home(){const [layer,setLayer]=useState(0); const [step,setStep]=useState(0); const [playing,setPlaying]=useState(false); const [menu,setMenu]=useState(false);
-useEffect(()=>{const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.reveal').forEach(e=>observer.observe(e));return()=>observer.disconnect()},[]);
-useEffect(()=>{if(!playing)return;if(step===3){setPlaying(false);return}const timer=setTimeout(()=>setStep(s=>s+1),2300);return()=>clearTimeout(timer)},[playing,step]);
-return <><a className="skip" href="#main">Skip to content</a><header><a href="#" className="wordmark" aria-label="Nivo home">nivo<span>.</span></a><nav aria-label="Main navigation" className={menu?'open':''}><a href="#vision" onClick={()=>setMenu(false)}>The vision</a><a href="#experience" onClick={()=>setMenu(false)}>The experience</a><a href="#architecture" onClick={()=>setMenu(false)}>Under the surface</a></nav><a className="nav-cta" href="#roadmap">A look ahead <ArrowUpRight size={14}/></a><button className="menu-button" aria-expanded={menu} aria-label="Toggle navigation" onClick={()=>setMenu(!menu)}>☰</button></header>
-<main id="main"><aside className="development-status" aria-label="Nivo development status"><strong>Nivo — In Development</strong><p>The Android app is not publicly released. Beta testing has not yet been confirmed.</p></aside><section className="hero"><div className="hero-glow"/><div className="hero-copy"><p className="eyebrow"><span/> A HUMAN-FIRST FINANCE CONCEPT</p><h1>Money, with a<br/>little more <em>peace.</em></h1><p className="hero-sub">Meet Nivo. A thoughtful companion for your money.<br className="desktop"/> Designed to bring clarity. Built around you.</p><div className="hero-actions"><a className="button" href="#experience">Explore the vision <ArrowUpRight size={17}/></a><a className="text-link" href="#architecture">See the architecture <ArrowRight size={16}/></a></div><p className="concept-note">A product & engineering case study · Concept, not a launched app</p></div><div className="hero-product"><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="floating-note"><span><ShieldCheck size={18}/></span><div>Your money. Your device.<small>Local-first by design</small></div></div><div className="hero-dashboard"><Dashboard/></div><div className="floating-record"><span className="check-circle"><Check size={16}/></span><div>One purchase. One record.<small>Less noise. More clarity.</small></div></div><p className="mock-label">ILLUSTRATIVE INTERFACE · FICTIONAL DATA</p></div><a className="scroll-cue" href="#vision"><ArrowDown size={14}/> A calmer way forward</a></section>
-<section id="vision" className="problem section-pad"><div className="reveal"><p className="eyebrow">01 — THE HUMAN PROBLEM</p><h2>Life is complicated.<br/>Your money shouldn’t<br/><span>add to it.</span></h2></div><div className="problem-copy reveal"><p>One account here. A credit card there.<br/>A stream of messages everywhere.</p><p>Knowing where you stand shouldn’t mean piecing together a dozen little fragments. Or learning to think like an accountant.</p><p className="strong-copy">Nivo starts with a simpler question:<br/>“How can we make this feel easier?”</p><div className="principles"><span><Leaf size={16}/> Calm over clutter</span><span><Fingerprint size={16}/> Agency over automation</span><span><Smartphone size={16}/> Yours by default</span></div></div></section>
-<section id="experience" className="experience section-pad"><div className="section-heading reveal"><p className="eyebrow">02 — THE PLANNED EXPERIENCE</p><h2>A little perspective.<br/><span>A lot less mental load.</span></h2><p>A home for the everyday picture. Thoughtful details when you need them.</p></div><div className="experience-stage reveal"><div className="experience-caption"><span className="tiny-label">HOME, REIMAGINED</span><h3>Understand your<br/>money at a glance.</h3><p>Balances, spending and recent activity, in language that feels like a conversation.</p><span className="pill">Concept interface</span></div><div className="wide-dash"><Dashboard/></div><div className="insight-card"><span className="insight-icon"><Leaf size={24}/></span><p>A gentle heads-up</p><h4>Your everyday spending<br/>has room to breathe.</h4><small>Illustrative insight. No live analysis.</small></div></div><div className="experience-footer"><span>Designed for real life.</span><p>No scores to chase. No guilt to carry. Just an honest picture, and the space to decide.</p></div></section>
-<section id="discovery" className="discovery section-pad"><div className="section-heading reveal"><p className="eyebrow">03 — FROM NOISE TO KNOWING</p><h2>Many signals.<br/><span>One clear story.</span></h2><p>A planned discovery pipeline that connects evidence without counting your money twice.</p></div><div className="journey-layout reveal"><div className="journey-controls"><p className="tiny-label">{journey[step].label}</p><h3>{journey[step].title}</h3><p>{journey[step].text}</p><div className="step-buttons" aria-label="Discovery steps">{journey.map((j,i)=><button key={i} aria-label={j.label} aria-pressed={step===i} className={step===i?'selected':''} onClick={()=>{setStep(i);setPlaying(false)}}>{String(i+1).padStart(2,'0')}</button>)}</div><button className="replay" onClick={()=>{setStep(0);setPlaying(true)}}><RotateCcw size={15}/>{playing?'Replaying journey…':'Replay the journey'}</button></div><div className={`signal-stage stage-${step}`}><div className="sms"><div><span>BANK · •• 2048</span><time>18:42:07</time></div><p>₹840.00 debited via UPI at GROVE MART. Ref <b>428017602931</b>.</p><small>Fictional bank SMS</small></div><div className="sms second"><div><span>CREDIT CARD · •• 9012</span><time>18:42:11</time></div><p>₹840.00 spent on your linked RuPay card via UPI. Ref <b>428017602931</b>.</p><small>Fictional card SMS · bank message refers to same linked card</small></div><div className="signal-connector"><span/><b>{step<2?'↓': '↳ evidence linked ↲'}</b><span/></div><div className={`resolved ${step>=2?'connected':''}`}><div className="check-circle"><Check size={18}/></div><div><b>{step===0?'Waiting for discovery':step===1?'₹840 · UPI · 18:42:07':step===2?'One candidate · two sources':'Grove Mart · ₹840.00'}<small>{step===3?'Ready for your review · expense + card liability':step===2?'Matching reference · amount · instrument':step===1?'Normalised fields · reference retained':'Interactive concept simulation'}</small></b></div><span className="resolved-tag">{step===3?'REVIEW':'PLANNED'}</span></div><p className="signal-foot">Original event time retained to HH:MM:SS precision.</p></div></div><p className="discovery-note">Illustrative matching logic, not an implemented parser. Different references or uncertain instruments require review; equal amounts alone never establish a duplicate.</p></section>
-<section id="architecture" className="architecture section-pad"><div className="section-heading reveal"><p className="eyebrow">04 — UNDER THE SURFACE</p><h2>Quiet on the outside.<br/><span>Intentional underneath.</span></h2><p>Explore the proposed layers. Each has one job, and a clear boundary.</p></div><div className="architecture-explorer reveal"><div className="layer-stack" role="tablist" aria-label="Architecture layers">{architecture.map((a,i)=><button id={`layer-${i}`} role="tab" aria-selected={layer===i} aria-controls="layer-panel" key={a.title} className={layer===i?'active':''} onClick={()=>setLayer(i)} onKeyDown={e=>{if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();const n=(i+(e.key==='ArrowDown'?1:4))%5;setLayer(n);document.getElementById(`layer-${n}`)?.focus()}}}><span className="layer-number">0{i+1}</span><div><b>{a.title}</b><small>{a.tech}</small></div><ChevronRight size={18}/></button>)}</div><div className="layer-detail" id="layer-panel" role="tabpanel" aria-labelledby={`layer-${layer}`}><Layers size={32}/><p className="tiny-label">PROPOSED LAYER 0{layer+1}</p><h3>{architecture[layer].copy}</h3><p>{architecture[layer].detail}</p><div className="tech-tags">{architecture[layer].tags.map(t=><span key={t}>{t}</span>)}</div></div></div><div className="architecture-bottom"><span><Database size={17}/> Device-owned source of truth</span><span>Signals → candidates → human review → ledger</span><span>External services are optional</span></div></section>
-<section id="security" className="security section-pad"><div className="reveal"><p className="eyebrow">05 — PRIVACY & RECOVERY</p><h2>Private by intention.<br/><span>Recoverable by design.</span></h2><p className="security-intro">Keeping your data close should never mean losing it when a device is gone.</p></div><div className="security-grid reveal"><div className="vault-visual"><div className="vault-ring"><div className="vault-ring inner"><LockKeyhole size={56} strokeWidth={1}/></div></div><span className="vault-label">YOUR DEVICE · YOUR DATA</span></div><div className="security-content"><article><span>01</span><div><h3>A protected local home.</h3><p>Planned encrypted storage, platform-backed keys and an optional biometric lock. No central transaction database is required by the core design.</p></div></article><article><span>02</span><div><h3>A backup that can stand on its own.</h3><p>A proposed versioned, authenticated encrypted package carries the data and recovery metadata. A separate recovery secret—not a device-only key—would let you restore on a new phone.</p></div></article><article><span>03</span><div><h3>Recovery that earns your trust.</h3><p>Restore would validate authenticity and schema before an atomic import. Wrong secrets and damaged packages must fail safely. Lost recovery secrets cannot be bypassed.</p></div></article></div></div><div className="backup-flow"><span>Local snapshot</span><ArrowRight/><span>Encrypt + authenticate</span><ArrowRight/><span>Your chosen destination</span><ArrowRight/><span>Restore with recovery secret</span></div><p className="security-disclaimer">Security goals, not audited guarantees. Cryptography, key derivation and recovery UX require implementation review and adversarial testing.</p></section>
-<section id="roadmap" className="roadmap section-pad"><div className="section-heading reveal"><p className="eyebrow">06 — A THOUGHTFUL WAY FORWARD</p><h2>Build trust.<br/><span>Then build on it.</span></h2><p>A proposed sequence, guided by validation rather than launch promises.</p></div><div className="roadmap-grid reveal">{[['01','Find the calm','Design & validate','Talk to people. Prototype core journeys. Test language, navigation and accessibility.','Exit: users can explain their money picture.'],['02','Make the foundation','Local ledger','Manual accounts and transactions. Precise money models. Migrations, encryption and recovery trials.','Exit: ledger invariants and restore tests pass.'],['03','Connect the fragments','Permissioned discovery','Validate platform permissions. Add parsers, provenance and cautious deduplication with review.','Exit: measured accuracy on consented fixtures.'],['04','Refine the everyday','Broader experience','Improve reconciliation, backups and insights after real-world usability and security review.','Exit: evidence supports a wider release.']].map(([num,title,label,copy,exit])=><article key={num}><span className="phase-number">{num}</span><p className="tiny-label">{label}</p><h3>{title}</h3><p>{copy}</p><small>{exit}</small><span className="phase-status">PLANNED</span></article>)}</div></section>
-<section className="engineering section-pad" id="engineering"><div className="engineering-heading reveal"><p className="eyebrow">07 — ENGINEERING NOTES</p><h2>The details<br/><span>make the difference.</span></h2><p>Decisions worth examining before the first release.</p></div><div className="engineering-list reveal">{[['Money & ledger invariants','Amounts use integer minor units with explicit currency. Transfers link both sides; refunds relate to original purchases. Credit-card settlement moves cash against liability without creating a second expense. Corrections preserve source provenance.'],['Time, provenance & deduplication','Store source event time including seconds, timezone where known, received time and parsing confidence separately. Exact references are preferred, but references need source and instrument context. Ambiguous matches remain reviewable. Re-importing the same source must be idempotent.'],['Backups, keys & restore integrity','Proposed packages contain format version, encrypted snapshot and authenticated metadata. A reviewed password-based key derivation scheme would protect a portable recovery key. Backup keys must be independent of the device keystore. Test wrong secrets, tampering, partial writes and forward-incompatible schemas.'],['Permission and platform constraints','Android SMS availability depends on platform policy and app eligibility. Gmail integration requires minimal OAuth scopes and any applicable verification. iOS does not provide general third-party SMS inbox access. Manual entry and file import should keep the core usable without adapters.'],['Validation before claims','Planned checks include ledger property tests, parser fixtures, false-match measurement, database migration tests, cross-device restores and accessible usability studies. Security claims require threat modelling and review; none of these checks have been completed for the planned finance app.']].map(([title,copy])=><details key={title}><summary>{title}<Plus size={18}/></summary><p>{copy}</p></details>)}</div></section>
-<section className="closing"><p className="eyebrow">A MORE HUMAN RELATIONSHIP WITH MONEY</p><h2>Less managing.<br/><em>More living.</em></h2><a className="button" href="#vision">Revisit the vision <ArrowUpRight size={17}/></a><p>Nivo is in development. The Android app is not publicly released, and beta testing has not yet been confirmed. This showcase explores the intended<br className="desktop"/> product and architecture, with fictional interfaces and data.</p></section></main><footer><a href="#" className="wordmark">nivo<span>.</span></a><p>Human-first. Local-first. Thoughtfully planned.</p><span>PRODUCT & ENGINEERING CASE STUDY · 2026</span></footer></>}
-
+function Visual({ hero = false }: { hero?: boolean }) {
+  const asset = site.screenshots[0];
+  return (
+    <figure className={hero ? "hero-visual" : ""}>
+      <Image
+        src={asset.src}
+        alt={asset.alt}
+        width={1024}
+        height={1536}
+        priority={hero}
+        sizes="(max-width: 760px) 100vw, 55vw"
+      />
+      <figcaption>{asset.caption}</figcaption>
+    </figure>
+  );
+}
+export default function Home() {
+  const appUrl = release.status === "released" ? release.androidUrl : null;
+  return (
+    <>
+      <a className="skip" href="#main">
+        Skip to content
+      </a>
+      <header className="flex items-center justify-between">
+        <a className="wordmark" href="#" aria-label="Nivo home">
+          nivo<span>.</span>
+        </a>
+        <nav aria-label="Main navigation">
+          <a href="#vision">The vision</a>
+          <a href="#experience">The experience</a>
+          <a href="#development">
+            What’s next <ArrowUpRight size={14} />
+          </a>
+        </nav>
+      </header>
+      <main id="main">
+        <section className="hero">
+          <div className="hero-copy">
+            <p className="eyebrow">
+              <span className="status-dot" />
+              {release.label}
+            </p>
+            <h1>
+              Money feels
+              <br />
+              better with
+              <br />
+              <em>a little clarity.</em>
+            </h1>
+            <p className="intro">
+              A calmer way to see your money.
+              <br />A little less noise. A little more Nivo.
+            </p>
+            <div className="hero-actions">
+              <a className="button" href="#experience">
+                Meet Nivo <ArrowUpRight size={18} />
+              </a>
+              <a className="quiet-link" href="#vision">
+                Our philosophy
+              </a>
+            </div>
+            <p className="micro">Thoughtfully taking shape for Android.</p>
+          </div>
+          <Visual hero />
+          <a className="scroll" href="#vision">
+            <ArrowDown size={16} /> A calmer way forward
+          </a>
+        </section>
+        <section id="vision" className="vision section">
+          <p className="eyebrow">01 / A LITTLE SPACE TO BREATHE</p>
+          <h2>
+            Life has enough
+            <br />
+            on its mind.
+            <br />
+            <span>
+              Money shouldn’t
+              <br />
+              take all of yours.
+            </span>
+          </h2>
+          <div className="vision-copy">
+            <p>
+              An account here. A card there. A hundred little moments in
+              between.
+            </p>
+            <p>
+              Nivo begins with a simple idea: understanding your money should
+              feel natural. Clear enough to make sense of your day, gentle
+              enough to let you get on with it.
+            </p>
+            <p className="signature">Clarity, without the pressure.</p>
+          </div>
+        </section>
+        <section id="experience" className="experience section">
+          <div className="section-top">
+            <p className="eyebrow">02 / THE EXPERIENCE WE’RE DESIGNING</p>
+            <h2>
+              Your everyday picture.
+              <br />
+              <em>Beautifully in view.</em>
+            </h2>
+            <p>One thoughtful home for the moments that make up your money.</p>
+          </div>
+          <div className="experience-grid">
+            <Visual />
+            <div className="feature-story">
+              {site.features.map((feature, i) => (
+                <article key={feature.title}>
+                  <span className="feature-number">0{i + 1}</span>
+                  <div>
+                    <h3>{feature.title}</h3>
+                    <p>{feature.copy}</p>
+                    <small>Planned experience</small>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+        <section className="philosophy section">
+          <p className="eyebrow">03 / BUILT AROUND A HUMAN</p>
+          <h2>
+            More perspective.
+            <br />
+            <span>Less pressure.</span>
+          </h2>
+          <div className="values">
+            {[
+              {
+                Icon: Leaf,
+                title: "Calm over clutter",
+                copy: "Space to understand. Language that feels familiar. The essentials, given room to breathe.",
+              },
+              {
+                Icon: SlidersHorizontal,
+                title: "Your decisions, your pace",
+                copy: "We’re designing for understanding and choice, without scores to chase or guilt to carry.",
+              },
+              {
+                Icon: Smartphone,
+                title: "Android, thoughtfully",
+                copy: "An experience shaped for Android from the start, with care for the details of everyday use.",
+              },
+            ].map(({ Icon, title, copy }) => (
+              <article key={title}>
+                <Icon size={24} strokeWidth={1.4} />
+                <h3>{title}</h3>
+                <p>{copy}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+        <section id="development" className="development section">
+          <div>
+            <p className="eyebrow">04 / GOOD THINGS TAKE CARE</p>
+            <h2>
+              A little closer
+              <br />
+              <em>every day.</em>
+            </h2>
+            <p className="development-label">
+              <span className="status-dot" />
+              {release.label}
+            </p>
+            <p className="development-copy">{release.description}</p>
+            {appUrl ? (
+              <a
+                className="button"
+                href={appUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Get Nivo for Android <ArrowUpRight size={18} />
+              </a>
+            ) : (
+              <a
+                className="button"
+                href={site.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Explore the website project <ArrowUpRight size={18} />
+              </a>
+            )}
+          </div>
+          <div className="timeline">
+            {[
+              {
+                title: "Shape the vision",
+                copy: "A warm, human-first direction for everyday financial clarity.",
+                status: "Design direction",
+              },
+              {
+                title: "Build with care",
+                copy: "Turn the intended experience into an Android app, then validate it through development and testing.",
+                status: "Development journey",
+              },
+              {
+                title: "Share when it’s ready",
+                copy: "Confirmed release details and an official Android app link will appear here when available.",
+                status: "No release date announced",
+              },
+            ].map((item, i) => (
+              <article key={item.title}>
+                <span>0{i + 1}</span>
+                <div>
+                  <h3>{item.title}</h3>
+                  <p>{item.copy}</p>
+                  <small>{item.status}</small>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+        <section className="closing">
+          <p className="eyebrow">YOUR MONEY. A LITTLE MORE HUMAN.</p>
+          <h2>
+            Make room
+            <br />
+            for <em>living.</em>
+          </h2>
+          <a className="quiet-link" href="#">
+            Back to the beginning ↑
+          </a>
+        </section>
+      </main>
+      <footer>
+        <a className="wordmark" href="#">
+          nivo<span>.</span>
+        </a>
+        <p>
+          {release.label}
+          <br />
+          <small>
+            Concept visuals. Fictional data. Final experience may change.
+          </small>
+        </p>
+        <a href={site.sourceUrl} target="_blank" rel="noopener noreferrer">
+          The website project <ArrowUpRight size={14} />
+        </a>
+      </footer>
+    </>
+  );
+}

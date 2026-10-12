@@ -1,38 +1,24 @@
-# Nivo — In Development
+# Nivo website
 
-A cinematic product and engineering showcase for the planned human-first, local-first Nivo finance companion. Built with Next.js, TypeScript, Tailwind CSS and Lucide icons.
+Official Nivo product website source: Next.js App Router, TypeScript and Tailwind CSS. Android app in development. No public app availability or release date is claimed. Features are described as planned. All visual data is fictional.
 
-**The Android app is not publicly released. Beta testing has not yet been confirmed.** This repository contains only the showcase website. Architecture and security descriptions are proposed goals, not audited or implemented guarantees. All dashboard balances, names, transactions and SMS examples are fictional.
+## Run locally
 
-## Local development
+Use Node.js 22 or 24. Run `npm ci`, then `npm run dev`. Open http://127.0.0.1:3000. Validate with `npm run typecheck` and `npm run build`. The static export is written to `out/`.
 
-Use Node.js 20.9 or newer with npm.
+## Maintain
 
-```sh
-npm ci
-npm run dev
-```
+- `config/site.ts`: release status, description, Android app URL, screenshot paths and feature copy.
+- `app/page.tsx`: semantic page structure and narrative.
+- `app/globals.css`: responsive design, animations and reduced-motion support.
+- `public/images/`: Android visuals exclusively.
 
-Open http://127.0.0.1:3000.
+When the app is actually released, set status to `released`, add the verified HTTPS store link to `androidUrl`, and update the label and description. Review the page’s development narrative too. The app button appears only with released status and a configured link. Replace concepts with genuine app screenshots when available; do not claim beta availability without confirmation.
 
-## Checks and production build
+The current asset is a generated Android design concept, not a working-app capture. Its captions preserve this distinction. See `ASSETS.md` for the ImageGen prompt.
 
-```sh
-npm run typecheck
-npm run build
-```
+## Deploy
 
-The build exports a static website into `out/`. Upload the contents of that directory to a static hosting provider. No environment variables, API keys, accounts or database are needed. Publishing this source repository does not automatically enable GitHub Pages.
+Import `bendavid01/nivo-showcase` into Vercel using Next.js, repository root and default build settings. No environment variables or secrets are needed. Git integration deploys future main-branch commits automatically. A GitHub push alone does not prove a deployment is live.
 
-## Website interactions
-
-- Responsive navigation and reduced-motion support.
-- Architecture layers with click and up/down keyboard navigation.
-- Four discovery stages with an explicit replay control.
-- Engineering notes using native expandable details.
-
-## Source provenance
-
-This is the existing Nivo cinematic case study created in the “Build Nivo cinematic case study” Work chat on October 10, 2026. Its original source was verified on the owner's Windows computer under `Documents/Codex/2026-10-10/referenced-chatgpt-conversation-this-is-an-2/outputs/nivo`. A public Sites deployment also exists. This GitHub copy omits deployment identity, Git history, generated output and local runtime files.
-
-The finance app, signing material, personal financial records and recovery secrets do not belong in this repository.
+The existing repository was reused because the connected GitHub tools do not support deleting/recreating repositories. History is preserved. This project contains website source only, not the Android app or personal financial data.
